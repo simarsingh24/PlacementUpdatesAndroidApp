@@ -22,6 +22,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class MainActivity extends AppCompatActivity {
+    private int fetchLimit=30;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,38 +34,67 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
-
-        new GraphRequest(
-                AccessToken.getCurrentAccessToken(),
-                "/236930879671269/feed",
-                null,
-                HttpMethod.GET,
-                new GraphRequest.Callback(){
-                    @Override
-                    public void onCompleted(GraphResponse response) {
-
-                        JSONObject json=response.getJSONObject();
-                        JSONArray jsonArray=new JSONArray();
-                        try {
-                            jsonArray=json.getJSONArray("data");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        String data1="harsimar";
-                        try {
-                            data1 = jsonArray.getJSONObject(1).getString("message");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                        Log.d("harsimarSingh","started");
-                        Log.d("harsimarSingh",data1.toString());
-                    }
-                }
-        ).executeAsync();
-
+        getFeed(53);
 
     }
+
+    private void getFeed(final int i) {
+
+        final int loopTimes=i/fetchLimit;
+        final int feedno=i-fetchLimit*loopTimes;
+        String fetchString="/236930879671269/feed?limit="+Integer.toString(fetchLimit);
+
+            new GraphRequest(
+                    AccessToken.getCurrentAccessToken(),
+                    fetchString,
+                    null,
+                    HttpMethod.GET,
+                    new GraphRequest.Callback() {
+                        @Override
+                        public void onCompleted(GraphResponse response) {
+
+                            JSONObject json = response.getJSONObject();
+                            JSONArray jsonArray = new JSONArray();
+                            JSONObject jsonObject;
+
+                            String data1 = "harsimar";
+/*
+                            for(int temp=0;temp<loopTimes;temp++){
+                            Log.d("harsimarSingh","hi");
+
+                            GraphRequest nextRequest=response.getRequestForPagedResults
+                                    (GraphResponse.PagingDirection.NEXT);
+                            if(nextRequest!=null) {
+                                nextRequest.setCallback(this);
+                                nextRequest.executeAndWait();
+                                }
+                            }*/
+
+                                GraphRequest nextRequest=response.getRequestForPagedResults(
+                                        GraphResponse.PagingDirection.NEXT);
+                            nextRequest.getGraphPath();
+                            Log.d("harsimarSingh",nextRequest.getGraphPath());
+
+                                try {
+                                    jsonArray = json.getJSONArray("data");
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                try {
+                                    data1 = jsonArray.getJSONObject(feedno).getString("message");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                Log.d("harsimarSingh",data1);
+                            }
+                    }
+
+            ).executeAsync();
+
+    }
+
+
     public boolean isLoggedIn() {
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         return accessToken != null;
