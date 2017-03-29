@@ -7,11 +7,4 @@
     android:layout_height="match_parent"
     tools:context="com.svnit.harsimar.placementfeed.MainActivity">
 
-    <com.facebook.login.widget.LoginButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/facebook_login_button"
-        android:layout_centerInParent="true"
-        />
-
 </RelativeLayout>
