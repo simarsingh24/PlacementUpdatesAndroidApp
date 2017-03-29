@@ -14,6 +14,10 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class LoginActivity extends AppCompatActivity {
     private LoginButton loginButton;
     private CallbackManager callbackManager;
@@ -39,12 +43,16 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setReadPermissions("email");
         callbackManager=CallbackManager.Factory.create();
 
+        loginButton.setReadPermissions(Arrays.asList("user_status"));
+
+
     }
 
     private void loginWithFb(){
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+
                 Intent intent= new Intent(LoginActivity.this,MainActivity.class);
                 //intent.putExtra(ACCOUNT_INFO,loginResul);
                 startActivity(intent);

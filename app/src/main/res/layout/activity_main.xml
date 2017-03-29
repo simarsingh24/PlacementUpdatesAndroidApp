@@ -7,4 +7,9 @@
     android:layout_height="match_parent"
     tools:context="com.svnit.harsimar.placementfeed.MainActivity">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/mainTextView"
+        android:text="harsimar in main"/>
 </RelativeLayout>

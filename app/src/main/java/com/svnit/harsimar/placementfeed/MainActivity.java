@@ -10,6 +10,9 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -25,6 +28,20 @@ public class MainActivity extends AppCompatActivity {
             Intent intent=new Intent(MainActivity.this,LoginActivity.class);
             startActivity(intent);
         }
+
+
+        new GraphRequest(
+                AccessToken.getCurrentAccessToken(),
+                "/236930879671269/feed",
+                null,
+                HttpMethod.GET,
+                new GraphRequest.Callback(){
+                    @Override
+                    public void onCompleted(GraphResponse response) {
+                        Log.d("harsimarSingh",response.toString());
+                    }
+                }
+        ).executeAsync();
 
 
     }
