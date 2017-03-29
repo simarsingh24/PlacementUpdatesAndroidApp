@@ -14,6 +14,10 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -38,7 +42,23 @@ public class MainActivity extends AppCompatActivity {
                 new GraphRequest.Callback(){
                     @Override
                     public void onCompleted(GraphResponse response) {
-                        Log.d("harsimarSingh",response.toString());
+
+                        JSONObject json=response.getJSONObject();
+                        JSONArray jsonArray=new JSONArray();
+                        try {
+                            jsonArray=json.getJSONArray("data");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        String data1="harsimar";
+                        try {
+                            data1 = jsonArray.getJSONObject(1).getString("message");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        Log.d("harsimarSingh","started");
+                        Log.d("harsimarSingh",data1.toString());
                     }
                 }
         ).executeAsync();
