@@ -27,53 +27,58 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Boolean logStatus=isLoggedIn();
 
         if(logStatus.toString()=="false"){
             Intent intent=new Intent(MainActivity.this,LoginActivity.class);
             startActivity(intent);
+        }else if(logStatus.toString()=="true") {
+            getFeed(20);
         }
-
-        getFeed(fetchLimit);
-
+       // generateKeyHash();
     }
 
     private void getFeed(final int i) {
 
-        final String fetchString="/236930879671269/feed?limit="+Integer.toString(i);
+        final int loopingConst=i/fetchLimit;
+        final int currFeed=i-fetchLimit*loopingConst;
 
+        final String fetchString="/236930879671269/feed?limit="+Integer.toString(i);
             new GraphRequest(
                     AccessToken.getCurrentAccessToken(),
                     fetchString,
                     null,
                     HttpMethod.GET,
+
                     new GraphRequest.Callback() {
                         @Override
                         public void onCompleted(GraphResponse response) {
 
+                            Log.d("harsimarSinghsir","called");
                             JSONObject json = response.getJSONObject();
                             JSONArray jsonArray = new JSONArray();
 
                             String data1 = "";
-
                                 try {
                                     jsonArray = json.getJSONArray("data");
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
                                 try {
-                                    data1 = jsonArray.getJSONObject(0).getString("message");
-                                    Log.d("harsimarSingh",data1);
+                                    data1 = jsonArray.getJSONObject(currFeed).getString("message");
+                                    Log.d("harsimarSingh", data1);
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
 
-                            GraphRequest nextResponse=response.getRequestForPagedResults(GraphResponse.PagingDirection.NEXT);
-                            if(nextResponse!=null){
-                                nextResponse.setCallback(this);
-                                nextResponse.executeAsync();
-                            }
+                                GraphRequest nextResponse = response.getRequestForPagedResults(GraphResponse.PagingDirection.NEXT);
+
+                                if (nextResponse != null) {
+                                    nextResponse.setCallback(this);
+                                    nextResponse.executeAsync();
+                                }
                         }
                     }
 
