@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
 
                                 try {
                                     jsonArray = json.getJSONArray("data");
-                                  //  Log.d("harsimarSingh",jsonArray.toString());
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -69,7 +68,33 @@ public class MainActivity extends AppCompatActivity {
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
+                            GraphRequest nextResponse=response.getRequestForPagedResults(GraphResponse.PagingDirection.NEXT);
+                            if(nextResponse!=null){
+                                nextResponse.setCallback(new GraphRequest.Callback() {
+                                    @Override
+                                    public void onCompleted(GraphResponse response) {
 
+                                        JSONObject json = response.getJSONObject();
+                                        JSONArray jsonArray = new JSONArray();
+
+                                        String data1 = "";
+
+                                        try {
+                                            jsonArray = json.getJSONArray("data");
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                        try {
+                                            data1 = jsonArray.getJSONObject(1).getString("message");
+                                            Log.d("harsimarSingh",data1);
+
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                                nextResponse.executeAsync();
+                            }
                         }
                     }
 
