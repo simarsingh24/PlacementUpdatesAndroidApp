@@ -34,17 +34,19 @@ public class MainActivity extends AppCompatActivity {
             Intent intent=new Intent(MainActivity.this,LoginActivity.class);
             startActivity(intent);
         }else if(logStatus.toString()=="true") {
-            getFeed(20);
+            getFeed(40);
         }
        // generateKeyHash();
     }
 
     private void getFeed(final int i) {
 
-        final int loopingConst=i/fetchLimit;
-        final int currFeed=i-fetchLimit*loopingConst;
+        final int[] loopingConst = {i / (fetchLimit-1)};
+        final int currFeed=i-(fetchLimit)* loopingConst[0];
+        Log.d("harsimarSingh", String.valueOf(loopingConst[0]));
+        Log.d("harsimarSingh", String.valueOf(currFeed));
 
-        final String fetchString="/236930879671269/feed?limit="+Integer.toString(i);
+        final String fetchString="/236930879671269/feed?limit="+Integer.toString(fetchLimit);
             new GraphRequest(
                     AccessToken.getCurrentAccessToken(),
                     fetchString,
@@ -55,11 +57,12 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onCompleted(GraphResponse response) {
 
-                            Log.d("harsimarSinghsir","called");
-                            JSONObject json = response.getJSONObject();
-                            JSONArray jsonArray = new JSONArray();
+                            if(loopingConst[0] ==0) {
+                                JSONObject json = response.getJSONObject();
+                                JSONArray jsonArray = new JSONArray();
 
-                            String data1 = "";
+
+                                String data1 = "";
                                 try {
                                     jsonArray = json.getJSONArray("data");
                                 } catch (JSONException e) {
@@ -72,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
+                            }else {
 
                                 GraphRequest nextResponse = response.getRequestForPagedResults(GraphResponse.PagingDirection.NEXT);
 
@@ -79,6 +83,8 @@ public class MainActivity extends AppCompatActivity {
                                     nextResponse.setCallback(this);
                                     nextResponse.executeAsync();
                                 }
+                                loopingConst[0]--;
+                            }
                         }
                     }
 
