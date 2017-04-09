@@ -22,7 +22,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class MainActivity extends AppCompatActivity {
-    private int fetchLimit=30;
+    private int fetchLimit=20;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,15 +34,13 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
-        getFeed(53);
+        getFeed(fetchLimit);
 
     }
 
     private void getFeed(final int i) {
 
-        final int loopTimes=i/fetchLimit;
-        final int feedno=i-fetchLimit*loopTimes;
-        String fetchString="/236930879671269/feed?limit="+Integer.toString(fetchLimit);
+        String fetchString="/236930879671269/feed?limit="+Integer.toString(i);
 
             new GraphRequest(
                     AccessToken.getCurrentAccessToken(),
@@ -55,39 +53,24 @@ public class MainActivity extends AppCompatActivity {
 
                             JSONObject json = response.getJSONObject();
                             JSONArray jsonArray = new JSONArray();
-                            JSONObject jsonObject;
 
-                            String data1 = "harsimar";
-/*
-                            for(int temp=0;temp<loopTimes;temp++){
-                            Log.d("harsimarSingh","hi");
-
-                            GraphRequest nextRequest=response.getRequestForPagedResults
-                                    (GraphResponse.PagingDirection.NEXT);
-                            if(nextRequest!=null) {
-                                nextRequest.setCallback(this);
-                                nextRequest.executeAndWait();
-                                }
-                            }*/
-
-                                GraphRequest nextRequest=response.getRequestForPagedResults(
-                                        GraphResponse.PagingDirection.NEXT);
-                            nextRequest.getGraphPath();
-                            Log.d("harsimarSingh",nextRequest.getGraphPath());
+                            String data1 = "";
 
                                 try {
                                     jsonArray = json.getJSONArray("data");
-
+                                  //  Log.d("harsimarSingh",jsonArray.toString());
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
                                 try {
-                                    data1 = jsonArray.getJSONObject(feedno).getString("message");
+                                    data1 = jsonArray.getJSONObject(1).getString("message");
+                                    Log.d("harsimarSingh",data1);
+
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-                                Log.d("harsimarSingh",data1);
-                            }
+
+                        }
                     }
 
             ).executeAsync();
