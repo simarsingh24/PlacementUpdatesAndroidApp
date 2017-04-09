@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent=new Intent(MainActivity.this,LoginActivity.class);
             startActivity(intent);
         }else if(logStatus.toString()=="true") {
-            getFeed(40);
+            getFeed(0);
         }
        // generateKeyHash();
     }
@@ -62,15 +62,17 @@ public class MainActivity extends AppCompatActivity {
                                 JSONArray jsonArray = new JSONArray();
 
 
-                                String data1 = "";
+                                String messageString = "";
+                                String postTime="";
                                 try {
                                     jsonArray = json.getJSONArray("data");
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
                                 try {
-                                    data1 = jsonArray.getJSONObject(currFeed).getString("message");
-                                    Log.d("harsimarSingh", data1);
+                                    messageString = jsonArray.getJSONObject(currFeed).getString("message");
+                                    postTime=jsonArray.getJSONObject(currFeed).getString("created_time");
+                                    Log.d("harsimarSingh", postTime);
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
