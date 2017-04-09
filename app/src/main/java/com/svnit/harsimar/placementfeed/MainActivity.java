@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getFeed(final int i) {
 
-        String fetchString="/236930879671269/feed?limit="+Integer.toString(i);
+        final String fetchString="/236930879671269/feed?limit="+Integer.toString(i);
 
             new GraphRequest(
                     AccessToken.getCurrentAccessToken(),
@@ -62,37 +62,16 @@ public class MainActivity extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
                                 try {
-                                    data1 = jsonArray.getJSONObject(1).getString("message");
+                                    data1 = jsonArray.getJSONObject(0).getString("message");
                                     Log.d("harsimarSingh",data1);
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
+
                             GraphRequest nextResponse=response.getRequestForPagedResults(GraphResponse.PagingDirection.NEXT);
                             if(nextResponse!=null){
-                                nextResponse.setCallback(new GraphRequest.Callback() {
-                                    @Override
-                                    public void onCompleted(GraphResponse response) {
-
-                                        JSONObject json = response.getJSONObject();
-                                        JSONArray jsonArray = new JSONArray();
-
-                                        String data1 = "";
-
-                                        try {
-                                            jsonArray = json.getJSONArray("data");
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-                                        try {
-                                            data1 = jsonArray.getJSONObject(1).getString("message");
-                                            Log.d("harsimarSingh",data1);
-
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                });
+                                nextResponse.setCallback(this);
                                 nextResponse.executeAsync();
                             }
                         }
