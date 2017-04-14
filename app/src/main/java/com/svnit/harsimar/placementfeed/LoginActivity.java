@@ -28,11 +28,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-      //  Log.d("harsimarSingh",Profile.getCurrentProfile().toString());
-       /* if(!Profile.getCurrentProfile().getId().isEmpty()){
-            Intent intent= new Intent(LoginActivity.this,MainActivity.class);
-            startActivity(intent);
-        }*/
         initialise();
         loginWithFb();
 
@@ -54,7 +49,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onSuccess(LoginResult loginResult) {
 
                 Intent intent= new Intent(LoginActivity.this,MainActivity.class);
-                //intent.putExtra(ACCOUNT_INFO,loginResul);
                 startActivity(intent);
             }
 

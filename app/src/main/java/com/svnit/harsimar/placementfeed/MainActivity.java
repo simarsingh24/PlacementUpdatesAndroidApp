@@ -20,6 +20,9 @@ import org.json.JSONObject;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private int fetchLimit=20;
@@ -34,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent=new Intent(MainActivity.this,LoginActivity.class);
             startActivity(intent);
         }else if(logStatus.toString()=="true") {
-            getFeed(0);
+            getFeed(1);
         }
        // generateKeyHash();
     }
@@ -72,8 +75,9 @@ public class MainActivity extends AppCompatActivity {
                                 try {
                                     messageString = jsonArray.getJSONObject(currFeed).getString("message");
                                     postTime=jsonArray.getJSONObject(currFeed).getString("created_time");
-                                    Log.d("harsimarSingh", postTime);
+                                    Log.d("harsimarSingh", messageString);
 
+                                    processString(messageString);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -91,6 +95,31 @@ public class MainActivity extends AppCompatActivity {
                     }
 
             ).executeAsync();
+
+    }
+
+    private void processString(String messageString) {
+
+        HashMap<String,String> mappedMessage;
+        mappedMessage=new HashMap<String, String>();
+
+        String currString="";
+
+        Log.d("harsimarSingh","processing started");
+        List<String> messageToList= Collections.emptyList();
+        currString=messageString.substring(0,messageString.indexOf("\n"));
+        mappedMessage.put("Organisation_Name",currString);
+
+        if(currString.toLowerCase().contains("internship")){
+            mappedMessage.put("Organisation_Type","Internship");
+        }else mappedMessage.put("Organisation_Category","Other");
+
+
+
+        Log.d("harsimarSinghName",mappedMessage.get("Organisation_Name"));
+        Log.d("harsimarSinghType",mappedMessage.get("Organisation_Category"));
+
+
 
     }
 
